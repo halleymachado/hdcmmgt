@@ -1,0 +1,19 @@
+
+import sqlite3
+from IPython.display import clear_output
+
+
+conexao = sqlite3.connect("cadastro.db")
+cursor = conexao.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    telefone TEXT,
+    senha TEXT NOT NULL
+)
+""")
+
+conexao.commit()
