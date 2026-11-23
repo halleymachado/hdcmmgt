@@ -1,0 +1,360 @@
+
+import tkinter as tk
+from tkinter import messagebox
+
+# Configurações da janela
+janela = tk.Tk()
+janela.title("EcoLink - Saque realizado")
+janela.geometry("336x508")
+janela.resizable(False, False)
+janela.configure(bg="#686868")
+
+# Cores
+VERDE = "#35BD2D"
+VERDE_ESCURO = "#00B96B"
+BRANCO = "#FFFFFF"
+CINZA = "#777777"
+PRETO = "#222222"
+
+# Área de desenho
+tela = tk.Canvas(
+    janela,
+    width=336,
+    height=508,
+    bg="#686868",
+    highlightthickness=0
+)
+tela.pack()
+
+# Moldura principal
+tela.create_rectangle(
+    41, 43, 331, 491,
+    fill=VERDE,
+    outline=""
+)
+
+tela.create_rectangle(
+    48, 55, 324, 479,
+    fill=BRANCO,
+    outline=""
+)
+
+# Configurações
+tela.create_text(
+    314, 63,
+    text="⚙",
+    fill="#34495E",
+    font=("Arial", 16, "bold")
+)
+
+# Logo EcoLink
+tela.create_text(
+    185, 70,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 20, "bold")
+)
+
+tela.create_text(
+    185, 96,
+    text="EcoLink",
+    fill="#00C853",
+    font=("Arial", 16, "bold")
+)
+
+tela.create_text(
+    150, 106,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 15)
+)
+
+tela.create_text(
+    220, 106,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 15)
+)
+
+# Título
+tela.create_text(
+    130, 146,
+    text="Recompensas",
+    fill=VERDE_ESCURO,
+    font=("Arial", 14)
+)
+
+# Pontos do usuário
+tela.create_text(
+    62, 173,
+    text="🍃",
+    font=("Arial", 16)
+)
+
+tela.create_text(
+    76, 182,
+    text="Seus Pontos",
+    fill=CINZA,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    147, 182,
+    text="150",
+    fill=VERDE_ESCURO,
+    font=("Arial", 10, "bold")
+)
+
+tela.create_text(
+    166, 173,
+    text="🍃",
+    font=("Arial", 16)
+)
+
+# Desenho de dinheiro
+tela.create_rectangle(
+    63, 208, 105, 244,
+    fill="#65C83F",
+    outline="black",
+    width=1
+)
+
+tela.create_rectangle(
+    75, 213, 101, 240,
+    fill="#D9E8B0",
+    outline="black"
+)
+
+tela.create_text(
+    88, 227,
+    text="$",
+    fill=VERDE_ESCURO,
+    font=("Arial", 18, "bold")
+)
+
+tela.create_rectangle(
+    64, 207, 91, 230,
+    fill="#C5D5A0",
+    outline="black"
+)
+
+tela.create_text(
+    78, 219,
+    text="$",
+    fill="black",
+    font=("Arial", 14, "bold")
+)
+
+# Valor sacado
+tela.create_text(
+    120, 226,
+    text="Sacar:",
+    fill=CINZA,
+    font=("Arial", 14, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    170, 226,
+    text="R$3,2",
+    fill=VERDE_ESCURO,
+    font=("Arial", 14, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    120, 246,
+    text="(10 pontos = R$1)",
+    fill=CINZA,
+    font=("Arial", 11, "bold"),
+    anchor="w"
+)
+
+# Botão sacar
+def sacar():
+    messagebox.showinfo(
+        "EcoLink",
+        "Saque confirmado!"
+    )
+
+tela.create_oval(
+    143, 261, 158, 279,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_oval(
+    191, 261, 206, 279,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_rectangle(
+    151, 261, 198, 279,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_text(
+    174, 270,
+    text="Sacar",
+    fill="black",
+    font=("Arial", 10),
+    tags="sacar"
+)
+
+tela.tag_bind(
+    "sacar",
+    "<Button-1>",
+    lambda e: sacar()
+)
+
+# Símbolo de sucesso
+tela.create_oval(
+    155, 292, 194, 331,
+    fill=VERDE_ESCURO,
+    outline=VERDE_ESCURO
+)
+
+# Desenho do check
+tela.create_line(
+    165, 311, 173, 319,
+    fill="white",
+    width=5,
+    capstyle=tk.ROUND
+)
+
+tela.create_line(
+    173, 319, 187, 302,
+    fill="white",
+    width=5,
+    capstyle=tk.ROUND
+)
+
+# Folhas decorativas
+tela.create_text(
+    138, 314,
+    text="🍃",
+    font=("Arial", 16)
+)
+
+tela.create_text(
+    210, 314,
+    text="🍃",
+    font=("Arial", 16)
+)
+
+# Mensagem de sucesso
+tela.create_text(
+    185, 354,
+    text="SAQUE REALIZADO COM SUCESSO!",
+    fill=PRETO,
+    font=("Arial", 10)
+)
+
+tela.create_text(
+    185, 372,
+    text="O VALOR 32,00 FOI ENVIADO PARA SUA CONTA PIX.",
+    fill=CINZA,
+    font=("Arial", 8)
+)
+
+# Comprovante PIX
+tela.create_oval(
+    70, 382, 294, 431,
+    fill="#A5F5B5",
+    outline="#A5F5B5"
+)
+
+tela.create_rectangle(
+    91, 382, 273, 431,
+    fill="#A5F5B5",
+    outline="#A5F5B5"
+)
+
+# Ícone PIX
+tela.create_text(
+    93, 405,
+    text="◆",
+    fill="#00A9A0",
+    font=("Arial", 20, "bold")
+)
+
+tela.create_text(
+    126, 397,
+    text="PIX",
+    fill="black",
+    font=("Arial", 12),
+    anchor="w"
+)
+
+tela.create_text(
+    126, 409,
+    text="VALOR",
+    fill="black",
+    font=("Arial", 7),
+    anchor="w"
+)
+
+tela.create_text(
+    126, 420,
+    text="32,00",
+    fill="black",
+    font=("Arial", 8),
+    anchor="w"
+)
+
+# Data e horário
+tela.create_text(
+    260, 398,
+    text="17:01",
+    fill="black",
+    font=("Arial", 9)
+)
+
+tela.create_text(
+    260, 417,
+    text="13/10/2026",
+    fill="black",
+    font=("Arial", 9)
+)
+
+# Botão OK
+def confirmar():
+    janela.destroy()
+
+tela.create_oval(
+    143, 439, 158, 468,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_oval(
+    202, 439, 217, 468,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_rectangle(
+    150, 439, 210, 468,
+    fill=VERDE,
+    outline=VERDE
+)
+
+tela.create_text(
+    180, 453,
+    text="OK",
+    fill="black",
+    font=("Arial", 10, "bold"),
+    tags="confirmar"
+)
+
+tela.tag_bind(
+    "confirmar",
+    "<Button-1>",
+    lambda e: confirmar()
+)
+
+# Executar aplicativo
+janela.mainloop()
