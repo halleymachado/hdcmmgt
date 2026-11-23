@@ -1,0 +1,157 @@
+import customtkinter as ctk
+
+# Configuração da aparência inicial
+ctk.set_appearance_mode("Light")
+ctk.set_default_color_theme("green")
+
+
+class EcoLinkApp(ctk.CTk):
+
+  def __init__(self):
+    super().__init__()
+
+    self.title("EcoLink - Missões Diárias")
+    self.geometry("420x720")
+    self.configure(fg_color="#555555")  # Fundo cinza externo idêntico ao protótipo
+
+    # Moldura externa verde simulando o Frame do design
+    outer_frame = ctk.CTkFrame(
+        self, fg_color="#2ecc71", corner_radius=0, width=380, height=680
+    )
+    outer_frame.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+
+    # Conteúdo interno branco
+    content_frame = ctk.CTkFrame(
+        outer_frame, fg_color="#ffffff", corner_radius=0, width=366, height=666
+    )
+    content_frame.place(relx=0.5, rely=0.5, anchor=ctk.CENTER)
+
+    # --- CABEÇALHO ---
+    header_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    header_frame.pack(fill="x", padx=15, pady=(15, 0))
+
+    # Botão de Configurações (Engrenagem)
+    btn_settings = ctk.CTkButton(
+        header_frame,
+        text="⚙️",
+        width=30,
+        height=30,
+        fg_color="transparent",
+        text_color="#444444",
+        font=("Arial", 16),
+        hover_color="#eeeeee",
+    )
+    btn_settings.pack(side="right")
+
+    # Logo EcoLink
+    lbl_logo = ctk.CTkLabel(
+        content_frame,
+        text="♻️ EcoLink",
+        font=("Arial Bold", 24),
+        text_color="#2ecc71",
+    )
+    lbl_logo.pack(pady=(10, 5))
+
+    # --- NÍVEL DO USUÁRIO ---
+    lbl_level = ctk.CTkLabel(
+        content_frame,
+        text="🍃 Seu Nível  17  🍃",
+        font=("Arial Bold", 16),
+        text_color="#2ecc71",
+    )
+    lbl_level.pack()
+
+    lbl_bonus = ctk.CTkLabel(
+        content_frame,
+        text="(+R$17/ 1,5% de bônus)",
+        font=("Arial", 12),
+        text_color="#666666",
+    )
+    lbl_bonus.pack(pady=(2, 10))
+
+    # Barra de progresso verde principal
+    progress_bar = ctk.CTkProgressBar(
+        content_frame, width=320, height=10, progress_color="#2ecc71"
+    )
+    progress_bar.set(0.65)
+    progress_bar.pack(pady=5)
+
+    # Três pequenos blocos abaixo da barra (verde, verde, preto)
+    bars_frame = ctk.CTkFrame(content_frame, fg_color="transparent")
+    bars_frame.pack(pady=8)
+
+    ctk.CTkFrame(bars_frame, fg_color="#2ecc71", width=100, height=12).pack(
+        side="left", padx=4
+    )
+    ctk.CTkFrame(bars_frame, fg_color="#2ecc71", width=100, height=12).pack(
+        side="left", padx=4
+    )
+    ctk.CTkFrame(bars_frame, fg_color="#000000", width=100, height=12).pack(
+        side="left", padx=4
+    )
+
+    lbl_exp = ctk.CTkLabel(
+        content_frame,
+        text="EXP: 10667",
+        font=("Arial Bold", 14),
+        text_color="#2ecc71",
+    )
+    lbl_exp.pack(pady=(2, 15))
+
+    # --- TÍTULO DAS MISSÕES ---
+    lbl_missions_title = ctk.CTkLabel(
+        content_frame,
+        text="Missões Diárias",
+        font=("Arial Bold", 22),
+        text_color="#2ecc71",
+    )
+    lbl_missions_title.pack(pady=(5, 20))
+
+    # --- LISTA DE MISSÕES ---
+    def criar_missao(numero, titulo, exp_valor):
+      mission_item = ctk.CTkFrame(content_frame, fg_color="transparent")
+      mission_item.pack(fill="x", padx=25, pady=10)
+
+      info_frame = ctk.CTkFrame(mission_item, fg_color="transparent")
+      info_frame.pack(side="left")
+
+      lbl_title = ctk.CTkLabel(
+          info_frame,
+          text=f"{numero}. {titulo}",
+          font=("Arial Bold", 13),
+          text_color="#555555",
+          anchor="w",
+      )
+      lbl_title.pack(anchor="w")
+
+      lbl_exp_val = ctk.CTkLabel(
+          info_frame,
+          text=f"EXP: {exp_valor}",
+          font=("Arial Bold", 13),
+          text_color="#2ecc71",
+          anchor="w",
+      )
+      lbl_exp_val.pack(anchor="w")
+
+      btn_collect = ctk.CTkButton(
+          mission_item,
+          text="Coletar",
+          font=("Arial Bold", 12),
+          fg_color="#2ecc71",
+          hover_color="#27ae60",
+          text_color="#ffffff",
+          corner_radius=15,
+          width=90,
+          height=32,
+      )
+      btn_collect.pack(side="right")
+
+    # Adicionando as missões da imagem
+    criar_missao(1, "Ganhar 50 pts", "10000")
+    criar_missao(2, "Coletar uma Recompensa", "5000")
+    criar_missao(3, "Convidar um amigo", "10000")
+
+
+if __name__ == "__main__":
+  app = EcoLinkApp()
+  app.mainloop()
