@@ -1,0 +1,86 @@
+ text="Metas",
+    font=("Arial", 8),
+    fill=PRETO
+)
+
+tela.create_text(
+    186, 286,
+    text="Navegação",
+    font=("Arial", 7),
+    fill=PRETO
+)
+
+tela.create_rectangle(
+    83, 274, 152, 298,
+    fill="",
+    outline="",
+    tags="Metas"
+)
+tela.tag_bind("Metas", "<Button-1>", lambda e: metas())
+
+tela.create_rectangle(
+    152, 274, 221, 298,
+    fill="",
+    outline="",
+    tags="Navegação"
+)
+tela.tag_bind("Navegação", "<Button-1>", lambda e: navegacao())
+
+# Botão Recompensas
+criar_botao(83, 325, 221, 351, "Recompensas", recompensas)
+
+
+# Lixeiras inferiores
+cores_lixeiras = [
+    "#65C83F",
+    "#009DD8",
+    "#FDD835",
+    "#F44336",
+    "#555555"
+]
+
+nomes = ["VIDRO", "PAPEL", "METAL", "PLÁST.", "OUTROS"]
+
+for i, cor in enumerate(cores_lixeiras):
+
+    x = 93 + i * 24
+
+    # Tampa
+    tela.create_rectangle(
+        x-1, 366, x+18, 371,
+        fill=cor,
+        outline=cor
+    )
+
+    # Corpo
+    tela.create_rectangle(
+        x, 371, x+16, 404,
+        fill=cor,
+        outline=cor
+    )
+
+    # Nome
+    tela.create_text(
+        x+8, 375,
+        text=nomes[i],
+        fill="white",
+        font=("Arial", 3, "bold")
+    )
+
+    # Símbolo de reciclagem
+    tela.create_text(
+        x+8, 391,
+        text="♻",
+        fill="white",
+        font=("Arial", 12, "bold")
+    )
+
+# Decoração inferior
+tela.create_text(
+    211, 404,
+    text="🌿",
+    font=("Arial", 19)
+)
+
+# Iniciar aplicativo
+janela.mainloop()
