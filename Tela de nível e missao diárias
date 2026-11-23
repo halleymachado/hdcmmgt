@@ -1,0 +1,325 @@
+
+import tkinter as tk
+from tkinter import messagebox
+
+# Configuração da janela
+janela = tk.Tk()
+janela.title("EcoLink - Missões Diárias")
+janela.geometry("270x430")
+janela.resizable(False, False)
+janela.configure(bg="#686868")
+
+# Cores
+VERDE = "#35BD2D"
+VERDE_ESCURO = "#009B45"
+BRANCO = "#FFFFFF"
+CINZA = "#777777"
+PRETO = "#111111"
+
+# Área principal
+tela = tk.Canvas(
+    janela,
+    width=270,
+    height=430,
+    bg="#686868",
+    highlightthickness=0
+)
+tela.pack()
+
+# Moldura
+tela.create_rectangle(
+    1, 0, 244, 400,
+    fill=VERDE,
+    outline=""
+)
+
+tela.create_rectangle(
+    7, 9, 238, 391,
+    fill=BRANCO,
+    outline=""
+)
+
+# Logo
+tela.create_text(
+    120, 20,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 16, "bold")
+)
+
+tela.create_text(
+    120, 41,
+    text="EcoLink",
+    fill="#00C853",
+    font=("Arial", 13, "bold")
+)
+
+tela.create_text(
+    99, 52,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 12)
+)
+
+tela.create_text(
+    145, 52,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 12)
+)
+
+# Configurações
+tela.create_text(
+    227, 17,
+    text="⚙",
+    fill="#34495E",
+    font=("Arial", 14)
+)
+
+# Nível do usuário
+tela.create_text(
+    27, 83,
+    text="🍃",
+    font=("Arial", 14)
+)
+
+tela.create_text(
+    38, 86,
+    text="Seu Nível",
+    fill=CINZA,
+    font=("Arial", 8, "bold"),
+    anchor="w"
+)
+
+nivel_texto = tela.create_text(
+    90, 86,
+    text="17",
+    fill=VERDE,
+    font=("Arial", 10, "bold")
+)
+
+tela.create_text(
+    108, 83,
+    text="🍃",
+    font=("Arial", 14)
+)
+
+tela.create_text(
+    65, 108,
+    text="(+R$17/ 1,5% de bônus)",
+    fill=CINZA,
+    font=("Arial", 8, "bold")
+)
+
+# Barra de progresso
+tela.create_rectangle(
+    26, 127, 197, 133,
+    fill="#EEEEEE",
+    outline=""
+)
+
+tela.create_rectangle(
+    26, 127, 197, 133,
+    fill=VERDE_ESCURO,
+    outline=""
+)
+
+# Barras de nível
+tela.create_rectangle(
+    26, 145, 80, 158,
+    fill="#00B96B",
+    outline=""
+)
+
+tela.create_rectangle(
+    87, 145, 151, 158,
+    fill="#00B96B",
+    outline=""
+)
+
+tela.create_rectangle(
+    156, 145, 219, 158,
+    fill="#07120D",
+    outline=""
+)
+
+# Experiência
+exp = 10667
+
+tela.create_text(
+    26, 169,
+    text="EXP:",
+    fill=CINZA,
+    font=("Arial", 8, "bold"),
+    anchor="w"
+)
+
+exp_texto = tela.create_text(
+    51, 169,
+    text=str(exp),
+    fill=VERDE_ESCURO,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+# Título das missões
+tela.create_text(
+    120, 201,
+    text="Missões Diárias",
+    fill="#00B96B",
+    font=("Arial", 17)
+)
+
+# Função para coletar missão
+def coletar_missao(numero, recompensa, botao):
+    global exp
+
+    exp += recompensa
+
+    tela.itemconfig(
+        exp_texto,
+        text=str(exp)
+    )
+
+    tela.itemconfig(
+        botao,
+        text="Coletado",
+        fill="#888888"
+    )
+
+    tela.tag_unbind(botao, "<Button-1>")
+
+    messagebox.showinfo(
+        "EcoLink",
+        f"Missão concluída!\nVocê recebeu {recompensa} EXP."
+    )
+
+
+# Função para criar botão
+def criar_botao(y, numero, recompensa):
+    x1, x2 = 158, 207
+
+    tela.create_oval(
+        x1, y, x1+12, y+15,
+        fill=VERDE,
+        outline=VERDE,
+        tags=f"botao{numero}"
+    )
+
+    tela.create_oval(
+        x2-12, y, x2, y+15,
+        fill=VERDE,
+        outline=VERDE,
+        tags=f"botao{numero}"
+    )
+
+    tela.create_rectangle(
+        x1+6, y, x2-6, y+15,
+        fill=VERDE,
+        outline=VERDE,
+        tags=f"botao{numero}"
+    )
+
+    texto = tela.create_text(
+        (x1+x2)/2,
+        y+7,
+        text="Coletar",
+        fill="black",
+        font=("Arial", 7),
+        tags=f"botao{numero}"
+    )
+
+    tela.tag_bind(
+        f"botao{numero}",
+        "<Button-1>",
+        lambda e: coletar_missao(
+            numero, recompensa, texto
+        )
+    )
+
+
+# Missão 1
+tela.create_text(
+    16, 219,
+    text="1. Ganhar 50 pts",
+    fill=CINZA,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    33, 235,
+    text="EXP:",
+    fill=CINZA,
+    font=("Arial", 8, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    59, 235,
+    text="10000",
+    fill=VERDE_ESCURO,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+criar_botao(224, 1, 10000)
+
+
+# Missão 2
+tela.create_text(
+    16, 261,
+    text="2. Coletar uma Recompensa",
+    fill=CINZA,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    33, 277,
+    text="EXP:",
+    fill=CINZA,
+    font=("Arial", 8, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    59, 277,
+    text="5000",
+    fill=VERDE_ESCURO,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+criar_botao(270, 2, 5000)
+
+
+# Missão 3
+tela.create_text(
+    16, 304,
+    text="3. Convidar um amigo",
+    fill=CINZA,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    33, 320,
+    text="EXP:",
+    fill=CINZA,
+    font=("Arial", 8, "bold"),
+    anchor="w"
+)
+
+tela.create_text(
+    59, 320,
+    text="10000",
+    fill=VERDE_ESCURO,
+    font=("Arial", 9, "bold"),
+    anchor="w"
+)
+
+criar_botao(313, 3, 10000)
+
+# Iniciar aplicativo
+janela.mainloop()
