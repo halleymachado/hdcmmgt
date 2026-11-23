@@ -1,0 +1,193 @@
+
+import tkinter as tk
+
+# Configurações da janela
+janela = tk.Tk()
+janela.title("EcoLink - Histórico de Saques")
+janela.geometry("270x410")
+janela.resizable(False, False)
+janela.configure(bg="#686868")
+
+# Cores
+VERDE = "#35BD2D"
+VERDE_ESCURO = "#00B96B"
+BRANCO = "#FFFFFF"
+CINZA = "#D8D8D8"
+CINZA_ESCURO = "#777777"
+PRETO = "#222222"
+
+# Área principal
+tela = tk.Canvas(
+    janela,
+    width=270,
+    height=410,
+    bg="#686868",
+    highlightthickness=0
+)
+tela.pack()
+
+# Moldura verde
+tela.create_rectangle(
+    0, 0, 240, 402,
+    fill=VERDE,
+    outline=""
+)
+
+# Fundo branco
+tela.create_rectangle(
+    6, 11, 234, 394,
+    fill=BRANCO,
+    outline=""
+)
+
+# Cabeçalho
+tela.create_text(
+    117, 24,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 17, "bold")
+)
+
+tela.create_text(
+    117, 44,
+    text="EcoLink",
+    fill="#00C853",
+    font=("Arial", 14, "bold")
+)
+
+tela.create_text(
+    90, 55,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 12)
+)
+
+tela.create_text(
+    144, 55,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 12)
+)
+
+# Botão voltar
+tela.create_text(
+    7, 55,
+    text="←",
+    fill=VERDE_ESCURO,
+    font=("Arial", 17, "bold"),
+    tags="voltar"
+)
+
+def voltar():
+    janela.destroy()
+
+tela.tag_bind(
+    "voltar",
+    "<Button-1>",
+    lambda e: voltar()
+)
+
+# Cabeçalho do histórico
+tela.create_rectangle(
+    4, 118, 230, 144,
+    fill=CINZA,
+    outline=""
+)
+
+tela.create_text(
+    108, 131,
+    text="Histórico de saque",
+    fill=CINZA_ESCURO,
+    font=("Arial", 9, "bold")
+)
+
+tela.create_text(
+    175, 131,
+    text="▧",
+    fill=PRETO,
+    font=("Arial", 17, "bold")
+)
+
+# Dados dos saques
+saques = [
+    {
+        "data": "10/02",
+        "status": "Resgate\nconcluído com\nsucesso",
+        "valor": "R$ 12,00"
+    },
+    {
+        "data": "10/02",
+        "status": "Resgate\nconcluído com\nsucesso",
+        "valor": "R$ 6,00"
+    },
+    {
+        "data": "10/02",
+        "status": "Resgate não\nconcluído",
+        "valor": "R$ 15,00"
+    }
+]
+
+# Função para criar os cartões
+def criar_historico(y, data, status, valor):
+
+    altura = 56
+
+    # Fundo do cartão
+    tela.create_rectangle(
+        4, y, 230, y+altura,
+        fill="#BDBDBD",
+        outline=""
+    )
+
+    # Área de informações
+    tela.create_rectangle(
+        83, y, 230, y+altura,
+        fill="#777777",
+        outline=""
+    )
+
+    # Data
+    tela.create_text(
+        43, y+28,
+        text=data,
+        fill=PRETO,
+        font=("Arial", 10, "bold")
+    )
+
+    # Status
+    tela.create_text(
+        86, y+5,
+        text=status,
+        fill=BRANCO,
+        font=("Arial", 7, "bold"),
+        anchor="nw"
+    )
+
+    # Valor
+    tela.create_text(
+        87, y+44,
+        text="Valor:  " + valor,
+        fill=BRANCO,
+        font=("Arial", 7, "bold"),
+        anchor="w"
+    )
+
+
+# Mostrar os históricos
+for i, saque in enumerate(saques):
+    criar_historico(
+        144 + i * 75,
+        saque["data"],
+        saque["status"],
+        saque["valor"]
+    )
+
+# Barra de rolagem decorativa
+tela.create_rectangle(
+    230, 69, 234, 89,
+    fill="#009B45",
+    outline=""
+)
+
+# Iniciar aplicativo
+janela.mainloop()
