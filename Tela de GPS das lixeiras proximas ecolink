@@ -1,0 +1,165 @@
+import math
+import tkinter as tk
+
+
+class TrashGPSApp:
+
+  def __init__(self, root):
+    self.root = root
+    self.root.title("EcoGPS - Localizador de Lixeiras")
+    self.root.geometry("900x650")
+    self.root.config(bg="#1e1e1e")
+
+    # Posição atual do usuário (no mapa)
+    self.user_x = 100
+    self.user_y = 450
+
+    # Banco de dados simulado de lixeiras (Nome, Coordenadas X, Y, Tipo)
+    self.bins = [
+        {"id": 1, "name": "Lixeira Praça Central", "x": 350, "y": 450, "type": "Reciclável", "color": "#00aa55"},
+        {"id": 2, "name": "Lixeira Metrô / Estação", "x": 650, "y": 200, "type": "Orgânico", "color": "#aa7700"},
+        {"id": 3, "name": "Ponto de Coleta Eletrônicos", "x": 700, "y": 500, "type": "Eletrônicos", "color": "#007acc"},
+        {"id": 4, "name": "Lixeira Parque Municipal", "x": 200, "y": 150, "type": "Reciclável", "color": "#00aa55"},
+    ]
+
+    self.selected_bin = None
+    self.navigating = False
+
+    self.create_widgets()
+
+  def create_widgets(self):
+    # Painel Superior (Instruções)
+    top_frame = tk.Frame(self.root, bg="#2d2d2d", height=70)
+    top_frame.pack(fill=tk.X, padx=10, pady=10)
+
+    self.instruction_label = tk.Label(
+        top_frame,
+        text="Selecione uma lixeira ao lado para ver a rota e navegar",
+        font=("Arial", 14, "bold"),
+        bg="#2d2d2d",
+        fg="#ffffff",
+    )
+    self.instruction_label.pack(side=tk.LEFT, padx=20, pady=20)
+
+    # Área Principal dividida entre Mapa e Menu Lateral
+    main_frame = tk.Frame(self.root, bg="#1e1e1e")
+    main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+
+    # --- Canvas do Mapa (Esquerda) ---
+    self.canvas = tk.Canvas(main_frame, bg="#111111", highlightthickness=0, width=580, height=500)
+    self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+    # --- Painel Lateral de Lixeiras (Direita) ---
+    sidebar = tk.Frame(main_frame, bg="#2d2d2d", width=280)
+    sidebar.pack(side=tk.RIGHT, fill=tk.Y, padx=(10, 0))
+
+    lbl_sidebar = tk.Label(
+        sidebar, text="📍 Lixeiras Próximas", font=("Arial", 13, "bold"), bg="#2d2d2d", fg="#00ffcc"
+    )
+    lbl_sidebar.pack(pady=15)
+
+    # Lista de botões para cada lixeira
+    for item in self.bins:
+      btn_frame = tk.Frame(sidebar, bg="#3d3d3d", pady=5)
+      btn_frame.pack(fill=tk.X, padx=10, pady=5)
+
+      info_text = f"{item['name']}\nTipo: {item['type']}"
+      lbl_info = tk.Label(btn_frame, text=info_text, font=("Arial", 10), bg="#3d3d3d", fg="#ffffff", justify=tk.LEFT)
+      lbl_info.pack(side=tk.LEFT, padx=10)
+
+      btn_go = tk.Button(
+          btn_frame,
+          text="Ir",
+          font=("Arial", 10, "bold"),
+          bg="#007acc",
+          fg="#ffffff",
+          command=lambda b=item: self.select_bin(b),
+      )
+      btn_go.pack(side=tk.RIGHT, padx=10)
+
+    # Painel Inferior (Status de Navegação)
+    bottom_frame = tk.Frame(self.root, bg="#2d2d2d", height=60)
+    bottom_frame.pack(fill=tk.X, padx=10, pady=10)
+
+    self.status_label = tk.Label(
+        bottom_frame, text="Distância: -- | Tempo Estimado: --", font=("Arial", 12), bg="#2d2d2d", fg="#ffcc00"
+    )
+    self.status_label.pack(side=tk.LEFT, padx=20, pady=15)
+
+    self.draw_map()
+
+  def draw_map(self):
+    self.canvas.delete("all")
+
+    # Desenhar ruas simuladas de fundo
+    self.canvas.create_line(0, 150, 900, 150, fill="#222222", width=30)
+    self.canvas.create_line(0, 320, 900, 320, fill="#222222", width=30)
+    self.canvas.create_line(0, 450, 900, 450, fill="#222222", width=30)
+    self.canvas.create_line(200, 0, 200, 600, fill="#222222", width=30)
+    self.canvas.create_line(500, 0, 500, 600, fill="#222222", width=30)
+    self.canvas.create_line(750, 0, 750, 600, fill="#222222", width=30)
+
+    # Se houver uma lixeira selecionada, desenhar a linha de rota
+    if self.selected_bin:
+      self.canvas.create_line(
+          self.user_x,
+          self.user_y,
+          self.selected_bin["x"],
+          self.selected_bin["y"],
+          fill="#00ffcc",
+          width=5,
+          dash=(6, 4),
+      )
+
+    # Desenhar todas as lixeiras
+    for b in self.bins:
+      r = 14
+      # Destacar lixeira selecionada
+      outline_color = "#ffffff" if self.selected_bin == b else "#333333"
+      width_val = 3 if self.selected_bin == b else 1
+
+      self.canvas.create_oval(
+          b["x"] - r,
+          b["y"] - r,
+          b["x"] + r,
+          b["y"] + r,
+          fill=b["color"],
+          outline=outline_color,
+          width=width_val,
+      )
+      self.canvas.create_text(
+          b["x"], b["y"] - 22, text=b["name"].split()[1], fill="#ffffff", font=("Arial", 8, "bold")
+      )
+
+    # Desenhar o Usuário (Ponto Azul)
+    self.canvas.create_oval(
+        self.user_x - 10,
+        self.user_y - 10,
+        self.user_x + 10,
+        self.user_y + 10,
+        fill="#007acc",
+        outline="#ffffff",
+        width=2,
+    )
+    self.canvas.create_text(
+        self.user_x, self.user_y + 20, text="Você", fill="#007acc", font=("Arial", 9, "bold")
+    )
+
+  def select_bin(self, target_bin):
+    self.selected_bin = target_bin
+    self.navigating = True
+    self.instruction_label.config(text=f"Navegando para: {target_bin['name']} ({target_bin['type']})")
+
+    # Calcular distância em pixels convertida para metros simulados
+    distance_px = math.hypot(target_bin["x"] - self.user_x, target_bin["y"] - self.user_y)
+    distance_m = int(distance_px * 2.5)  # Fator de escala simulado
+    time_min = max(1, int(distance_m / 80))  # Caminhando a ~80m por minuto
+
+    self.status_label.config(text=f"Distância: {distance_m} metros | Tempo Estimado: ~{time_min} min a pé")
+    self.draw_map()
+
+
+if __name__ == "__main__":
+  root = tk.Tk()
+  app = TrashGPSApp(root)
+  root.mainloop()
