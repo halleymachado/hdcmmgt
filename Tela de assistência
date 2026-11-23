@@ -1,0 +1,259 @@
+
+import tkinter as tk
+
+# Configurações da janela
+janela = tk.Tk()
+janela.title("EcoLink - Assistência")
+janela.geometry("240x360")
+janela.resizable(False, False)
+janela.configure(bg="#686868")
+
+# Cores
+VERDE = "#35BD2D"
+VERDE_CLARO = "#A8F0C8"
+BRANCO = "#FFFFFF"
+CINZA = "#EEEEEE"
+PRETO = "#222222"
+
+# Área principal
+tela = tk.Canvas(
+    janela,
+    width=240,
+    height=360,
+    bg="#686868",
+    highlightthickness=0
+)
+tela.pack()
+
+# Moldura verde
+tela.create_rectangle(
+    2, 2, 218, 357,
+    fill=VERDE,
+    outline=""
+)
+
+# Fundo branco
+tela.create_rectangle(
+    8, 10, 212, 348,
+    fill=BRANCO,
+    outline=""
+)
+
+# Cabeçalho
+tela.create_rectangle(
+    8, 10, 212, 56,
+    fill=CINZA,
+    outline=""
+)
+
+# Logo EcoLink
+tela.create_text(
+    111, 18,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 13, "bold")
+)
+
+tela.create_text(
+    111, 35,
+    text="EcoLink",
+    fill="#00C853",
+    font=("Arial", 12, "bold")
+)
+
+tela.create_text(
+    91, 45,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 10)
+)
+
+tela.create_text(
+    131, 45,
+    text="♻",
+    fill="#00C853",
+    font=("Arial", 10)
+)
+
+# Botão voltar
+tela.create_text(
+    15, 46,
+    text="←",
+    fill=VERDE_ESCURO if False else "#008C35",
+    font=("Arial", 17, "bold"),
+    tags="voltar"
+)
+
+# Função voltar
+def voltar():
+    janela.destroy()
+
+tela.tag_bind(
+    "voltar",
+    "<Button-1>",
+    lambda e: voltar()
+)
+
+# Função para criar balões arredondados
+def balao(x1, y1, x2, y2, cor, texto, ancora, tag):
+
+    tela.create_oval(
+        x1, y1, x1+18, y2,
+        fill=cor,
+        outline=cor
+    )
+
+    tela.create_oval(
+        x2-18, y1, x2, y2,
+        fill=cor,
+        outline=cor
+    )
+
+    tela.create_rectangle(
+        x1+9, y1, x2-9, y2,
+        fill=cor,
+        outline=cor
+    )
+
+    tela.create_text(
+        (x1+x2)/2,
+        (y1+y2)/2,
+        text=texto,
+        fill=PRETO,
+        font=("Arial", 8, "bold"),
+        tags=tag
+    )
+
+
+# Mensagem do usuário
+balao(
+    152, 148, 194, 166,
+    "#BBBBBB",
+    "Ajuda!",
+    "center",
+    "mensagem_usuario"
+)
+
+# Ícone do usuário
+tela.create_oval(
+    196, 150, 211, 165,
+    outline="#555555",
+    width=1
+)
+
+tela.create_oval(
+    201, 152, 206, 157,
+    outline="#555555"
+)
+
+tela.create_arc(
+    199, 156, 208, 165,
+    start=0, extent=180,
+    outline="#555555"
+)
+
+# Logo pequeno do assistente
+tela.create_text(
+    23, 188,
+    text="♻EcoLink",
+    fill="#00C853",
+    font=("Arial", 6, "bold")
+)
+
+# Mensagem do assistente
+balao(
+    39, 177, 155, 197,
+    VERDE_CLARO,
+    "Olá como posso te ajudar?",
+    "center",
+    "mensagem_bot"
+)
+
+
+# Área de mensagens
+mensagens = []
+
+def enviar_mensagem(event=None):
+
+    mensagem = entrada.get().strip()
+
+    if mensagem == "":
+        return
+
+    # Posição da nova mensagem
+    y = 215 + len(mensagens) * 42
+
+    # Evita ultrapassar a área visível
+    if y > 285:
+        return
+
+    # Mensagem do usuário
+    balao(
+        120, y, 199, y+22,
+        "#BBBBBB",
+        mensagem,
+        "center",
+        f"msg{len(mensagens)}"
+    )
+
+    mensagens.append(mensagem)
+
+    entrada.delete(0, tk.END)
+
+    # Resposta simulada
+    resposta = "Como posso ajudar?"
+
+    y_resposta = y + 27
+
+    tela.create_text(
+        23, y_resposta+10,
+        text="EcoLink",
+        fill="#00C853",
+        font=("Arial", 6, "bold")
+    )
+
+    balao(
+        39, y_resposta, 160, y_resposta+20,
+        VERDE_CLARO,
+        resposta,
+        "center",
+        f"resp{len(mensagens)}"
+    )
+
+
+# Rodapé
+tela.create_rectangle(
+    8, 295, 212, 348,
+    fill=CINZA,
+    outline=""
+)
+
+# Caixa de digitação
+entrada = tk.Entry(
+    janela,
+    font=("Arial", 8),
+    bg=CINZA,
+    fg=PRETO,
+    justify="center",
+    relief="flat",
+    borderwidth=0
+)
+
+entrada.place(
+    x=20,
+    y=307,
+    width=180,
+    height=28
+)
+
+entrada.insert(0, "Digite aqui")
+entrada.bind("<Return>", enviar_mensagem)
+
+def limpar_placeholder(event):
+    if entrada.get() == "Digite aqui":
+        entrada.delete(0, tk.END)
+
+entrada.bind("<FocusIn>", limpar_placeholder)
+
+# Iniciar aplicativo
+janela.mainloop()
