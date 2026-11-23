@@ -1,19 +1,37 @@
-
 import sqlite3
 from IPython.display import clear_output
 
+def inicializar_banco():
+    conexao = sqlite3.connect('cadastro.db')
+    cursor = conexao.cursor()
 
-conexao = sqlite3.connect("cadastro.db")
-cursor = conexao.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            telefone TEXT,
+            senha TEXT NOT NULL
+        )
+    ''')
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS usuarios (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    telefone TEXT,
-    senha TEXT NOT NULL
-)
-""")
+    conexao.commit()
+    conexao.close()
+    print("Banco de dados e tabela 'usuarios' criados com sucesso!")
 
-conexao.commit()
+def inserir_usuario_teste(nome, email, telefone, senha):
+    conexao = sqlite3.connect('cadastro.db')
+    cursor = conexao.cursor()
+
+    try:
+        cursor.execute('''
+            INSERT INTO usuarios (nome, email, telefone, senha)
+            VALUES (?, ?, ?, ?)
+        ''', (nome, email, telefone, senha))
+
+        conexao.commit()
+        print(f"Usuário '{nome}' cadastrado com sucesso!")
+    except sqlite3.IntegrityError:
+        print(f"Erro: O e-mail '{email}' já está cadastrado.")
+    finally:
+        conexao.close()
